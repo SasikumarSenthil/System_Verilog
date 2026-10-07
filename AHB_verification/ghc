@@ -1,0 +1,23 @@
+fork
+  mon.run();
+  scb.run();
+  drv.run();
+  begin
+    gen.run();
+    $display("[%0t] Generator finished", $time);
+  end
+join_none
+
+fork
+  begin
+    wait (scb.checked == 6);
+    $display("[%0t] PASS: all %0d transactions checked",
+             $time, scb.checked);
+    $finish;
+  end
+
+  begin
+    #5000;
+    $fatal(1, "Timeout: checked=%0d transactions", scb.checked);
+  end
+join
